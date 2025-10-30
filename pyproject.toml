@@ -1,0 +1,23 @@
+[project]
+name = "simple-web-server"
+version = "0.1.0"
+description = "Django web security project"
+requires-python = ">=3.11"
+dependencies = [
+    "django>=4.2.17",
+    "djangorestframework>=3.14.0",
+    "python-decouple>=3.8",
+    "gunicorn>=21.2.0",
+    "dj-database-url>=2.3.0",
+    "psycopg[binary]>=3.2.3",
+    "whitenoise>=6.6.0",
+    "django-extensions>=3.2.3",
+    "opaque>=1.0.0",
+    "pysodium>=0.7.18",
+]
+
+[dependency-groups]
+dev = ["djlint>=1.36.4"]
+
+[tool.djlint]
+ignore = "H030,H031,T002"
