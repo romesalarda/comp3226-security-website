@@ -82,11 +82,19 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Format: postgresql://username:password@host:port/database_name
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
+        default=config('DATABASE_URL', default=None),
         conn_max_age=600,
         conn_health_checks=True,
     )
 }
+
+# Raise error if DATABASE_URL is not set
+if not DATABASES['default']:
+    raise ValueError(
+        "DATABASE_URL environment variable is not set. "
+        "Please set it in your .env file or Railway environment variables. "
+        "Format: postgresql://username:password@host:port/database_name"
+    )
 
 
 # Password validation
