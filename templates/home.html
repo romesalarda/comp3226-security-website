@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_css %}
+<style>
+    .home-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .welcome-card {
+        background: white;
+        padding: 3rem 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    
+    .welcome-card h2 {
+        color: #667eea;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+    }
+    
+    .welcome-card p {
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+    
+    .user-info {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 4px;
+        margin-top: 2rem;
+    }
+    
+    .user-info h3 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+    
+    .user-info ul {
+        list-style: none;
+        text-align: left;
+    }
+    
+    .user-info li {
+        padding: 0.5rem 0;
+        color: #555;
+    }
+    
+    .user-info strong {
+        color: #333;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="welcome-card">
+        <h2>Welcome{% if user.is_authenticated %}, {{ user.username }}{% endif %}!</h2>
+        <p>You have successfully logged in to the application.</p>
+        
+        {% if user.is_authenticated %}
+        <div class="user-info">
+            <h3>User Information</h3>
+            <ul>
+                <li><strong>Username:</strong> {{ user.username }}</li>
+                <li><strong>Email:</strong> {{ user.email|default:"Not set" }}</li>
+                <li><strong>Staff Status:</strong> {{ user.is_staff|yesno:"Yes,No" }}</li>
+                <li><strong>Last Login:</strong> {{ user.last_login|date:"F d, Y H:i" }}</li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
