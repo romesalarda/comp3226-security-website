@@ -1,8 +1,5 @@
-[providers]
-python = "3.11"
-
 [phases.setup]
-nixPkgs = ["...", "postgresql"]
+nixPkgs = ["postgresql"]
 
 [phases.install]
 cmds = ["pip install -r requirements.txt"]
