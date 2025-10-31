@@ -56,21 +56,6 @@ python manage.py collectstatic
 python manage.py runserver
 ```
 
-**Production (Linux/Mac):**
-```bash
-chmod +x start_production.sh
-./start_production.sh
-```
-
-**Production (Windows):**
-```bash
-start_production.bat
-```
-
-Or manually with Gunicorn:
-```bash
-gunicorn core.wsgi:application --config gunicorn_config.py
-```
 
 ## Configuration Details
 
@@ -100,35 +85,6 @@ The following security settings are configured via environment variables:
 - **Cookie Age**: 2 weeks (1209600 seconds)
 - **HttpOnly**: Enabled
 - **SameSite**: Lax
-
-## Creating API Endpoints
-
-### Example API App Structure
-
-1. Create a new app:
-```bash
-python manage.py startapp api
-```
-
-2. Add to `INSTALLED_APPS` in `settings.py`:
-```python
-INSTALLED_APPS = [
-    # ...
-    'api',
-]
-```
-
-3. Create serializers, views, and URLs in your app
-
-4. Include API URLs in `core/urls.py`:
-```python
-from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-]
-```
 
 ## Production Checklist
 

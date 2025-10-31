@@ -96,15 +96,15 @@
             {% csrf_token %}
             
             <div class="form-group">
-                <label for="id_username">Username</label>
-                <input type="text" 
-                       name="username" 
-                       id="id_username" 
+                <label for="id_email">Email</label>
+                <input type="email" 
+                       name="email" 
+                       id="id_email" 
                        required 
                        autofocus
-                       {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
-                {% if form.username.errors %}
-                <div class="error-message">{{ form.username.errors }}</div>
+                       {% if form.email.value %}value="{{ form.email.value }}"{% endif %}>
+                {% if form.email.errors %}
+                <div class="error-message">{{ form.email.errors }}</div>
                 {% endif %}
             </div>
             

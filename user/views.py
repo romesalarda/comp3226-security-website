@@ -10,10 +10,10 @@ def login_view(request):
         return redirect('home')
     
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
         
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=email, password=password)
         
         if user is not None:
             login(request, user)
@@ -21,7 +21,7 @@ def login_view(request):
             next_url = request.GET.get('next', 'home')
             return redirect(next_url)
         else:
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid email or password.')
     
     return render(request, 'login.html')
 
