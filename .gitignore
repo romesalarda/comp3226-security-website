@@ -15,6 +15,10 @@ db.sqlite3-journal
 /media
 /staticfiles
 /static
+/migrations
+
+# OPAQUE server keys (SECURITY: Do not commit!)
+opaque_server_setup.json
 
 # Environment
 .env

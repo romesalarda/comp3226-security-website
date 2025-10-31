@@ -3,16 +3,55 @@ import opaquepy
 from user.models import CustomUser
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
+from django.conf import settings
 import base64
 import uuid
+import os
+import json
+
+def get_server_setup():
+    """
+    Get or create a persistent OPAQUE server setup.
+    The setup is stored in a file to survive server restarts.
+    
+    Keep in mind that changing the serverSetup will invalidate all existing password files.
+
+    """
+    setup_file = os.path.join(settings.BASE_DIR, 'opaque_server_setup.json')
+    
+    # Try to load existing setup
+    if os.path.exists(setup_file):
+        try:
+            with open(setup_file, 'r') as f:
+                setup_data = f.read()
+                print(f"Loaded existing OPAQUE setup from {setup_file}")
+                return setup_data
+        except Exception as e:
+            print(f"Error loading setup file: {e}")
+    
+    # Create new setup if none exists
+    print("Creating new OPAQUE server setup...")
+    setup = opaquepy.create_setup()
+    
+    # Save setup to file
+    try:
+        with open(setup_file, 'w') as f:
+            f.write(setup)
+        print(f"Saved OPAQUE setup to {setup_file}")
+    except Exception as e:
+        print(f"Warning: Could not save setup to file: {e}")
+    
+    return setup
+
+# Initialize server setup once at module load
+SERVER_SETUP = get_server_setup()
 
 @decorators.api_view(["POST"])
 def opaque_registration(req:request.HttpRequest):
     email = req.data.get("email")
     registration_request = req.data.get("registration_request")
     print("Registration request recieved from extension :" + str(registration_request))
-    setup = opaquepy.create_setup()
-    to_client = opaquepy.register(setup, registration_request, email)
+    to_client = opaquepy.register(SERVER_SETUP, registration_request, email)
     print("Sending request back to client :" + str(to_client))
     return response.Response(to_client)
 
@@ -38,11 +77,9 @@ def opaque_login(req:request.HttpRequest):
     
     user = get_object_or_404(CustomUser, email=email)
     
-    setup = opaquepy.create_setup()
-    
     client_response, login_state = opaquepy.login(
-        setup=setup,
-        password_file=user.opaque_envelope,
+        setup=SERVER_SETUP,
+        password_file=user.opaque_envelope.decode("utf-8"),
         client_request=client_request,
         credential_id=email
     )
