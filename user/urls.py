@@ -4,7 +4,10 @@ from user.api.viewsets import (
     opaque_registration, 
     opaque_registration_finish,
     opaque_login,
-    opaque_login_finish
+    opaque_login_finish,
+    verify_session,
+    logout_session,
+    session_redirect
 )
 
 
@@ -19,4 +22,9 @@ urlpatterns = [
     path('o/registration/finish', opaque_registration_finish, name="o-reg-terminate"),
     path('o/login', opaque_login, name="o-login"),
     path('o/login/finish', opaque_login_finish, name="o-login-finish"),
+    
+    # Session management endpoints
+    path('o/session/verify', verify_session, name="o-session-verify"),
+    path('o/session/logout', logout_session, name="o-session-logout"),
+    path('o/session/redirect', session_redirect, name="o-session-redirect"),
 ]

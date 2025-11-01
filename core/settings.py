@@ -38,6 +38,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.railway.app',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'chrome-extension://ficbichgmlfpbjnmgbjegbppdknfafdd'
+
 ]
 
 
@@ -50,13 +52,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'user'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add Whitenoise right after SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    'corsheaders.middleware.CorsMiddleware',  
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -205,6 +209,23 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
+
+# CORS Configuration for Browser Extension
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'chrome-extension://ficbichgmlfpbjnmgbjegbppdknfafdd'
+]
+
+# Allow credentials (cookies, authentication headers) in CORS requests
+CORS_ALLOW_CREDENTIALS = True
+
+# Allow extension origins (Chrome/Firefox extensions)
+# Browser extensions use special origins like chrome-extension:// or moz-extension://
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^chrome-extension://.*$",
+    r"^moz-extension://.*$",
+]
 
 # Cache Configuration
 CACHES = {

@@ -1,9 +1,14 @@
 from rest_framework import decorators, request, response
-import opaquepy
+from rest_framework.permissions import IsAuthenticated
 from user.models import CustomUser
+
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
 from django.conf import settings
+from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_exempt
+
+import opaquepy
 import base64
 import uuid
 import os
@@ -127,13 +132,67 @@ def opaque_login_finish(req:request.HttpRequest):
     login_state = cache_data.get('login_state')
     email = cache_data.get('email')
     user_id = cache_data.get('user_id')
+    
+    session_key = opaquepy.login_finish(
+        client_finish_request,
+        login_state)
+    
+    
  
     cache.delete(cache_key)
+    user = get_object_or_404(CustomUser, email=email)
+    
+    login(req, user)
     
     print(f"Login completed for user: {email}")
+    print(f"Session key: {req.session.session_key}")
+    print(f"User authenticated: {req.user.is_authenticated}")
     
     return response.Response({
         "statusText": "Login successful",
         "email": email,
-        "user_id": user_id
+        "user_id": user_id,
+        "session_active": True
+    })
+
+@decorators.api_view(["GET"])
+@decorators.permission_classes([IsAuthenticated])
+def verify_session(req:request.HttpRequest):
+    """
+    Verify that the user's session is active and valid
+    """
+    return response.Response({
+        "authenticated": True,
+        "email": req.user.email,
+        "user_id": req.user.id
+    })
+
+@decorators.api_view(["GET"])
+def session_redirect(req:request.HttpRequest):
+    """
+    Redirect endpoint that transfers the session to browser context.
+    Used after OPAQUE login to activate session in main browser.
+    """
+    from django.shortcuts import redirect
+    
+    if req.user.is_authenticated:
+        # Session is valid, redirect to home
+        return redirect('home')
+    else:
+        # No valid session, redirect to login
+        return redirect('login')
+
+@decorators.api_view(["POST"])
+@decorators.permission_classes([IsAuthenticated])
+def logout_session(req:request.HttpRequest):
+    """
+    Logout the user and invalidate the session
+    """
+    from django.contrib.auth import logout
+    email = req.user.email
+    logout(req)
+    
+    return response.Response({
+        "statusText": "Logout successful",
+        "email": email
     })
