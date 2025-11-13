@@ -17,7 +17,6 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -39,7 +38,6 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'chrome-extension://ficbichgmlfpbjnmgbjegbppdknfafdd'
-
 ]
 
 
@@ -101,6 +99,14 @@ DATABASES = {
         conn_max_age=600,
         conn_health_checks=True,
     )
+}
+
+DATABASES = {
+    'default': 
+        {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3"
+        }
 }
 
 # Raise error if DATABASE_URL is not set

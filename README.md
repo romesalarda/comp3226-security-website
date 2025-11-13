@@ -30,6 +30,30 @@ Edit `.env` and set:
 - `DEBUG`: Set to `False` in production
 - `ALLOWED_HOSTS`: Add your domain names (comma-separated)
 - Security settings: Set to `True` when using HTTPS
+- IMPORTANT: if you DO NOT have postgres installed, and want to use sqlite3 for testing, replace this bit of code
+
+replace
+```python
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default=None),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
+```
+with 
+
+```python
+DATABASES = {
+    'default': 
+        {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3"
+        }
+}
+```
+This should use the built in sqlite3 backend, USE FOR TESTING ONLY - PRODUCTION USE POSTGRES
 
 ### 3. Run Migrations
 
