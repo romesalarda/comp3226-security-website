@@ -13,7 +13,7 @@ class Command(BaseCommand):
         email = config('DJANGO_SUPERUSER_EMAIL', default='admin@example.com')
         password = config('DJANGO_SUPERUSER_PASSWORD', default='admin')
         
-        if not User.objects.filter(username=username).exists():
+        if not User.objects.filter(email=email).exists():
             User.objects.create_superuser(
                 # username=username,
                 email=email,
