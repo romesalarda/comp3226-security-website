@@ -18,7 +18,7 @@ class CustomUserAdmin(BaseUserAdmin):
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions', 'opaque_envelope'),
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
@@ -30,4 +30,4 @@ class CustomUserAdmin(BaseUserAdmin):
         }),
     )
     
-    readonly_fields = ('date_joined', 'last_login', 'opaque_envelope')
+    readonly_fields = ('date_joined', 'last_login')

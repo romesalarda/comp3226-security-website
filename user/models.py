@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, User
 from django.utils import timezone
 
 
@@ -46,9 +46,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    
-    opaque_envelope = models.BinaryField(null=True, blank=True) 
-
 
     objects = CustomUserManager()
 
@@ -75,10 +72,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         """
         return self.first_name
     
-class UserSession(models.Model):
+# class UserSession(models.Model):
     
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    session_token = models.CharField(max_length=64, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
-    user_agent = models.TextField(blank=True)
+#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     session_token = models.CharField(max_length=64, unique=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     expires_at = models.DateTimeField()
+#     user_agent = models.TextField(blank=True)

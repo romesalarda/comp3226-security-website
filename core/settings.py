@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'django_rest_opaque',
+    
     'corsheaders',
     'rest_framework',
     'user'
@@ -93,21 +96,25 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # PostgreSQL configuration using DATABASE_URL
 # Format: postgresql://username:password@host:port/database_name
-DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL', default=None),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
 
-DATABASES = {
-    'default': 
-        {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3"
-        }
-}
+if DEBUG:
+    # SQLite for local development
+    DATABASES = {
+        'default': 
+            {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3"
+            }
+    }
+else:
+    # Production database configuration from DATABASE_URL
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=config('DATABASE_URL', default=None),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
 
 # Raise error if DATABASE_URL is not set
 if not DATABASES['default']:
@@ -173,8 +180,6 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Custom User Model
-AUTH_USER_MODEL = 'user.CustomUser'
 
 # Django REST Framework Configuration
 REST_FRAMEWORK = {
@@ -233,7 +238,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^moz-extension://.*$",
 ]
 
-# Cache Configuration
+# Cache Configuration - could switch to Redis or Memcached in production
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -245,7 +250,16 @@ CACHES = {
     }
 }
 
+OPAQUE_SETTINGS = {
+    "USER_QUERY_FIELD": "email", 
+    "USER_ID_FIELD": "id",
+    
+    "OPAQUE_SERVER_SETUP": config('OPAQUE_SERVER_SETUP', default=None),
+}
+
 # Authentication Settings
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
+
+AUTH_USER_MODEL = 'user.CustomUser'
