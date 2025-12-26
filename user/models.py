@@ -72,6 +72,23 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         """
         return self.first_name
     
+# CustomUser.objects.filter(email="fornite")
+
+# class Post(models.Model):
+#     """
+#     A simple Post model to demonstrate relationships with CustomUser.
+#     """
+#     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts')
+#     title = models.CharField(max_length=200)
+#     content = models.TextField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name='posts')
+    
+
+#     def __str__(self):
+#         return self.title
+    
 # class UserSession(models.Model):
     
 #     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

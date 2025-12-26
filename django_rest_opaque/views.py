@@ -34,7 +34,10 @@ def opaque_registration_finish(req:request.HttpRequest):
     client_request_finish = req.data.get("registration_record")
     
     envelope_to_be_saved = opaquepy.register_finish(client_request_finish)
-    user = get_user_model().objects.create(**{OPAQUE_SETTINGS["USER_QUERY_FIELD"]: user_id})
+    
+    user, created = get_user_model().objects.get_or_create(**{OPAQUE_SETTINGS["USER_QUERY_FIELD"]: user_id})
+    if user.opaque_credential:
+        user.opaque_credential.delete()
     user.opaque_credential = OpaqueCredential.objects.create(user=user, opaque_envelope=bytes(envelope_to_be_saved, encoding="utf-8"))
     user.save()
     
@@ -50,8 +53,13 @@ def opaque_login(req:request.HttpRequest):
     client_request = req.data.get("client_request")
     
     user = get_object_or_404(get_user_model(), **{OPAQUE_SETTINGS["USER_QUERY_FIELD"]: user_id})
-    
-    envelope = user.opaque_credential.opaque_envelope.decode("utf-8")
+    try:
+        envelope = user.opaque_credential.opaque_envelope.decode("utf-8")
+    except OpaqueCredential.DoesNotExist:
+        return response.Response(
+            {"error": "User does not have OPAQUE credentials"},
+            status=401
+        )
     
     client_response, login_state = opaquepy.login(
         setup=SERVER_SETUP,
@@ -121,6 +129,15 @@ def opaque_login_finish(req:request.HttpRequest):
         OPAQUE_SETTINGS["USER_QUERY_FIELD"]: user_id,
         "session_active": True
     })
+    
+@decorators.api_view(["GET"])
+def check_opaque_support(req:request.HttpRequest):
+    """
+    Endpoint to check if OPAQUE is supported on the server
+    """
+    return response.Response({
+        "opaque_supported": True,
+        "message": "OPAQUE is supported on this server."})
 
 @decorators.api_view(["GET"])
 @decorators.permission_classes([IsAuthenticated])

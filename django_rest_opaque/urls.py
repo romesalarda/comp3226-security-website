@@ -8,7 +8,8 @@ from django_rest_opaque.views import (
     opaque_login_finish,
     verify_session,
     logout_session,
-    session_redirect
+    session_redirect,
+    check_opaque_support,
 )
 
 
@@ -24,6 +25,8 @@ urlpatterns = [
     path('session/verify', verify_session, name="o-session-verify"),
     path('session/logout', logout_session, name="o-session-logout"),
     path('session/redirect', session_redirect, name="o-session-redirect"),
+    
+    path('check', check_opaque_support, name="o-support-check"),
 ]
 
 OPAQUEURLPATTERNS = urlpatterns
