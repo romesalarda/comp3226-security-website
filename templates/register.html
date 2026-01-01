@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block extra_css %}
 <style>
-    .login-container {
+    .register-container {
         max-width: 400px;
         margin: 0 auto;
     }
     
-    .login-card {
+    .register-card {
         background: white;
         padding: 2rem;
         border-radius: 8px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
-    .login-card h2 {
+    .register-card h2 {
         margin-bottom: 1.5rem;
         color: #333;
         text-align: center;
@@ -78,17 +78,34 @@
         margin-bottom: 1rem;
         border: 1px solid #f5c6cb;
     }
+    
+    .login-link {
+        text-align: center;
+        margin-top: 1rem;
+        color: #666;
+    }
+    
+    .login-link a {
+        color: #667eea;
+        text-decoration: none;
+    }
+    
+    .login-link a:hover {
+        text-decoration: underline;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="login-container">
-    <div class="login-card">
-        <h2>Login</h2>
+<div class="register-container">
+    <div class="register-card">
+        <h2>Register</h2>
         
-        {% if form.non_field_errors %}
+        {% if messages %}
         <div class="form-errors">
-            {{ form.non_field_errors }}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
         </div>
         {% endif %}
         
@@ -102,28 +119,30 @@
                        id="id_email" 
                        required 
                        autofocus
-                       {% if form.email.value %}value="{{ form.email.value }}"{% endif %}>
-                {% if form.email.errors %}
-                <div class="error-message">{{ form.email.errors }}</div>
-                {% endif %}
+                       {% if email %}value="{{ email }}"{% endif %}>
             </div>
             
             <div class="form-group">
-                <label for="id_password">Password</label>
+                <label for="id_password1">Password</label>
                 <input type="password" 
-                       name="password" 
-                       id="id_password" 
+                       name="password1" 
+                       id="id_password1" 
                        required>
-                {% if form.password.errors %}
-                <div class="error-message">{{ form.password.errors }}</div>
-                {% endif %}
             </div>
             
-            <button type="submit" class="submit-btn">Login</button>
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                <input type="password" 
+                       name="password2" 
+                       id="id_password2" 
+                       required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Register</button>
         </form>
         
-        <div class="login-link" style="text-align: center; margin-top: 1rem; color: #666;">
-            Don't have an account? <a href="{% url 'register' %}" style="color: #667eea; text-decoration: none;">Register here</a>
+        <div class="login-link">
+            Already have an account? <a href="{% url 'login' %}">Login here</a>
         </div>
     </div>
 </div>

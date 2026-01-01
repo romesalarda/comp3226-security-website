@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}Test Malicious Page{% endblock %}
+
+{% block extra_css %}
+<style>
+    .test-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .test-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .test-card h2 {
+        margin-bottom: 1rem;
+        color: #333;
+    }
+    
+    .test-card h3 {
+        margin: 1.5rem 0 1rem 0;
+        color: #555;
+        font-size: 1.1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: 500;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+    
+    .submit-btn {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+    
+    /* Various hiding techniques */
+    .hidden-display-none {
+        display: none;
+    }
+    
+    .hidden-visibility {
+        visibility: hidden;
+        height: 0;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .hidden-opacity {
+        opacity: 0;
+        height: 0;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .hidden-offscreen {
+        position: absolute;
+        left: -9999px;
+    }
+    
+    .hidden-zero-size {
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+    
+    .warning-banner {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 2rem;
+        color: #856404;
+    }
+    
+    .warning-banner strong {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="test-container">
+    <div class="warning-banner">
+        <strong>⚠️ Security Testing Page</strong>
+        This page simulates various malicious password field hiding techniques for testing the OPAQUE extension's detection capabilities.
+    </div>
+    
+    <div class="test-card">
+        <h2>Malicious Form with Hidden Password Fields</h2>
+        <p>This form contains multiple hidden password fields using different CSS techniques. Your extension should be able to detect and mark all of them.</p>
+        
+        <form method="post" action="{% url 'test_malicious' %}">
+            {% csrf_token %}
+            
+            <h3>Visible Fields (Decoy)</h3>
+            <div class="form-group">
+                <label for="visible-email">Email</label>
+                <input type="email" id="visible-email" name="email" placeholder="Enter your email">
+            </div>
+            
+            <h3>Hidden Password Field #1 (display: none)</h3>
+            <div class="form-group hidden-display-none">
+                <label for="hidden-pass-1">Password</label>
+                <input type="password" id="hidden-pass-1" name="password1" placeholder="Hidden with display:none">
+            </div>
+            
+            <h3>Hidden Password Field #2 (visibility: hidden)</h3>
+            <div class="hidden-visibility">
+                <label for="hidden-pass-2">Password</label>
+                <input type="password" id="hidden-pass-2" name="password2" placeholder="Hidden with visibility:hidden">
+            </div>
+            
+            <h3>Hidden Password Field #3 (opacity: 0)</h3>
+            <div class="hidden-opacity">
+                <label for="hidden-pass-3">Password</label>
+                <input type="password" id="hidden-pass-3" name="password3" placeholder="Hidden with opacity:0">
+            </div>
+            
+            <h3>Hidden Password Field #4 (positioned off-screen)</h3>
+            <div class="hidden-offscreen">
+                <label for="hidden-pass-4">Password</label>
+                <input type="password" id="hidden-pass-4" name="password4" placeholder="Hidden off-screen">
+            </div>
+            
+            <h3>Hidden Password Field #5 (zero size)</h3>
+            <div class="hidden-zero-size">
+                <label for="hidden-pass-5">Password</label>
+                <input type="password" id="hidden-pass-5" name="password5" placeholder="Hidden with zero size">
+            </div>
+            
+            <h3>Hidden Password Field #6 (inline style)</h3>
+            <div style="display: none;">
+                <label for="hidden-pass-6">Password</label>
+                <input type="password" id="hidden-pass-6" name="password6" placeholder="Hidden with inline style">
+            </div>
+            
+            <h3>Hidden Password Field #7 (height: 0, overflow: hidden)</h3>
+            <div style="height: 0; overflow: hidden;">
+                <label for="hidden-pass-7">Password</label>
+                <input type="password" id="hidden-pass-7" name="password7" placeholder="Hidden with height:0">
+            </div>
+            
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+    </div>
+    
+    <div class="test-card">
+        <h2>Expected Behavior</h2>
+        <ul>
+            <li>✅ Detect all 7 hidden password fields</li>
+            <li>✅ Mark them as visible or warn the user</li>
+            <li>✅ Prevent credential theft through hidden fields</li>
+            <li>✅ Allow interaction with visible email field</li>
+            <li>✅ Extension should only autofill the visible email field, not hidden password fields</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
