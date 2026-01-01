@@ -1,5 +1,6 @@
 from rest_framework import decorators, request, response
 from rest_framework.permissions import IsAuthenticated
+from django.core.exceptions import ImproperlyConfigured
 # from user.models import CustomUser
 from . import OPAQUE_SETTINGS
 
@@ -19,6 +20,12 @@ import hashlib
 
 # Initialize server setup once at module load
 SERVER_SETUP = OPAQUE_SETTINGS["OPAQUE_SERVER_SETUP"]
+
+def check_opaque_setup():
+    if SERVER_SETUP is None:
+        raise ImproperlyConfigured(
+            "OPAQUE_SETTINGS must include 'OPAQUE_SERVER_SETUP' with the server setup key. Run 'python manage.py generate_opaque_setup' to create one."
+        )
 
 @decorators.api_view(["POST"])
 def opaque_registration(req:request.HttpRequest):
