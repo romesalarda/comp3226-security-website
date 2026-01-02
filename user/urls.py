@@ -28,5 +28,6 @@ urlpatterns = [
     path('o/session/logout', logout_session, name="o-session-logout"),
     path('o/session/redirect', session_redirect, name="o-session-redirect"),
 
+    #attacker endpoint
     path('attacker/', views.attacker_view, name="attacker"),
 ]

@@ -34,7 +34,8 @@ def logout_view(request):
         return redirect('login')
     return redirect('home')
 
-def attacker_view(request):
+def attacker_view(request)
+"""Attacker page"""
     context = {}
     
     if request.method == 'POST':
