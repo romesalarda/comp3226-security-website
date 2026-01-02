@@ -96,11 +96,15 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # PostgreSQL configuration using DATABASE_URL
 # Format: postgresql://username:password@host:port/database_name
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL', default=None),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    # 'default': dj_database_url.config(
+    #     default=config('DATABASE_URL', default=None),
+    #     conn_max_age=600,
+    #     conn_health_checks=True,
+    # )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3"
+    }
 }
 
 # Raise error if DATABASE_URL is not set

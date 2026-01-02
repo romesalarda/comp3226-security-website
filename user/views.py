@@ -34,6 +34,22 @@ def logout_view(request):
         return redirect('login')
     return redirect('home')
 
+def attacker_view(request):
+    context = {}
+    
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        if email and password:
+            print(f"[ATTACKER] Captured - Email: {email}, Password: {password}")
+        
+        context['captured_email'] = email
+        context['captured_password'] = password
+        messages.success(request, 'Successfully logged in!')
+
+    return render(request, 'attacker.html', context)
+
 
 @login_required
 def home_view(request):

@@ -27,4 +27,6 @@ urlpatterns = [
     path('o/session/verify', verify_session, name="o-session-verify"),
     path('o/session/logout', logout_session, name="o-session-logout"),
     path('o/session/redirect', session_redirect, name="o-session-redirect"),
+
+    path('attacker/', views.attacker_view, name="attacker"),
 ]
