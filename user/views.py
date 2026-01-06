@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 def login_view(request):
     """Handle user login"""
@@ -37,7 +36,6 @@ def logout_view(request):
     return redirect('home')
 
 
-@csrf_exempt
 def attacker_view(request):
     context = {}
     
