@@ -115,7 +115,7 @@
     
     <div class="test-card">
         <h2>Malicious Form with Hidden Password Fields</h2>
-        <p>This form contains multiple hidden password fields using different CSS techniques. Your extension should be able to detect and mark all of them.</p>
+        <p>This form contains multiple hidden password fields using different CSS techniques. The extension should be able to detect and mark all of them.</p>
         
         <form method="post" action="{% url 'test_malicious' %}">
             {% csrf_token %}
@@ -170,17 +170,6 @@
             
             <button type="submit" class="submit-btn">Login</button>
         </form>
-    </div>
-    
-    <div class="test-card">
-        <h2>Expected Behavior</h2>
-        <ul>
-            <li>✅ Detect all 7 hidden password fields</li>
-            <li>✅ Mark them as visible or warn the user</li>
-            <li>✅ Prevent credential theft through hidden fields</li>
-            <li>✅ Allow interaction with visible email field</li>
-            <li>✅ Extension should only autofill the visible email field, not hidden password fields</li>
-        </ul>
     </div>
 </div>
 {% endblock %}
