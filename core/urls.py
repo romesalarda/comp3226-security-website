@@ -14,11 +14,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.core.exceptions import ImproperlyConfigured
 from django.urls import path, include
-from django_rest_opaque.urls import OPAQUEURLPATTERNS
+import logging
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
-    path('o/', include(OPAQUEURLPATTERNS)),
+    
 ]
+try:
+    from django_rest_opaque.urls import get_url_patterns as get_opaque_urlpatterns
+
+    urlpatterns.append(
+        path('o/', include((get_opaque_urlpatterns(), 'django_rest_opaque'), namespace='opaque'))
+    )
+
+except (ImportError, ImproperlyConfigured) as e:
+    logging.warning("django-rest-opaque is not installed or you haven't added the OPAQUE_SERVER_SETUP. Skipping OPAQUE authentication URLs.")
+    logging.error("Orignal error: %s", e)

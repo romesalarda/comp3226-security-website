@@ -11,6 +11,18 @@ This Django project is configured for production deployment with:
 
 ## Setup Instructions
 
+Note, the django_rest
+
+To install django_rest_opaque
+
+1. git clone https://github.com/romesalarda/django-rest-opaque.git
+2. Enusre your virtual environment is installed and using python less than version 14
+3. In the venv, run 
+```bash
+pip install -e <LOCATION_TO_CLONED REPO>
+```
+4. Follow general setup instructions
+
 ### 1. Install Dependencies
 
 ```bash
