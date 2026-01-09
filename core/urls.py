@@ -28,7 +28,7 @@ try:
     from django_rest_opaque.urls import get_url_patterns as get_opaque_urlpatterns
 
     urlpatterns.append(
-        path('o/', include((get_opaque_urlpatterns(), 'django_rest_opaque'), namespace='opaque'))
+        path('o/', include((get_opaque_urlpatterns())))
     )
 
 except (ImportError, ImproperlyConfigured) as e:
